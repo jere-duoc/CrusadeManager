@@ -1,0 +1,11 @@
+:root {
+  --navbar-height: 64px;   /* altura fija de la barra */
+  --navbar-width: 100%;    /* ancho que abarque toda la pantalla (usar 100% evita scroll horizontal que puede crear 100vw) */
+  --navbar-z: 1000;        /* por si quieres que quede encima del contenido */
+  /* ...otras variables... */
+}
+
+.main-content {
+  margin-top: var(--navbar-height);
+}
+

@@ -1,11 +1,13 @@
 import { Routes, Route } from "react-router-dom"
 import Navbar_Menu from './assets/components/Navbar_menu'
-import Home from './pages/Home'
-import Login from './pages/Login'
-import Evento from './Evento'
-import Perfil_Usuario from './Perfil_Usuario'
-import Crear_Cruzada from './Crear_Cruzada'
-import Historial from './Historial'
+import Home from './App/Home'
+import Login from './App/Login'
+import Evento from './App/Evento'
+import Perfil_Usuario from './App/Perfil_Usuario'
+import Crear_Cruzada from './App/Crear_Cruzada'
+import Historial from './App/Historial'
+import './assets/style/App.css';
+import './assets/style/Navbar.css';
 
 function App() {
 
