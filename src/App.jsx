@@ -7,6 +7,8 @@ import Evento from './App/Evento'
 import Perfil_Usuario from './App/Perfil_Usuario'
 import Crear_Cruzada from './App/Crear_Cruzada'
 import Historial from './App/Historial'
+import Jugadores from './App/Jugadores'
+import Placings from './App/Placings'
 
 import './assets/style/App.css';
 import Emparejamiento from "./App/Emparejamiento"
@@ -23,8 +25,10 @@ function App() {
         <Route path="/Login" element={<><Navbar_Menu /><Login /></>} />
 
         <Route path="/Evento" element={<><Navbar_Evento /><Evento /></>} />
+        <Route path="/Jugadores" element={<><Navbar_Evento /><Jugadores /></>} />
         <Route path="/Emparejamiento" element={<><Navbar_Evento /><Emparejamiento /></>} />
-
+        <Route path="/Placings" element={<><Navbar_Evento /><Placings /></>} />
+        <Route path="/Perfil_Usuario" element={<><Navbar_Evento /><Perfil_Usuario /></>} />
       </Routes>
     </>
   )
