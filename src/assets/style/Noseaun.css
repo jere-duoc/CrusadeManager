@@ -1,0 +1,105 @@
+:root {
+  --navbar-height: 60px;
+}
+
+body {
+  margin: 0;
+  /* Allow the page to grow and be scrollable instead of fixing to viewport height */
+  min-height: 100vh;
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
+    /*Para que la imagen se oscurezca*/
+    url('../img/fondo.jpg') no-repeat center center fixed;
+  background-size: cover;
+  /*La imagen se ajusta un poco*/
+  color: rgb(250, 250, 250);
+  /*Color de las letras directamente en el body*/
+
+}
+
+
+.centrar {
+  justify-content: center;
+  display: flex;
+  align-items: center;
+
+}
+
+.text-format {
+  color: rgb(250, 250, 250);
+  font-family: 'Arial', sans-serif;
+}
+
+.contenido {
+
+  color: white;
+  background: rgba(0, 0, 0, 0.6);
+  /* fondo oscuro semi-transparente */
+  padding: 20px;
+  /* Let content determine its own height so page can scroll when content is large */
+  min-height: auto;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.cuadrado {
+  border: 1px solid white;
+  border-radius: 3px;
+  padding: 5px;
+  margin-top: 5px;
+  background: rgba(0, 0, 0, 0.6);
+  /* Oscuro y transparente */
+}
+
+
+.posicion-text {
+  margin-top: var(--navbar-height) ;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  
+  padding-left: 10vw;       
+  padding-right: 10vw;
+  max-width: 800px;
+
+  height: calc(100vh - var(--navbar-height));
+  
+}
+
+
+
+
+
+
+
+
+
+
+
+/*Seccion navbar (falta) vertical mas burbuga interactuable*/
+.wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh; 
+  width: 20px; 
+  cursor: pointer;
+  
+}
+
+.bubble {
+  position: fixed;
+  top: 50%; 
+  left: -50px; 
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  background-color: #ffffff;
+  border-radius: 50%;
+  transition: left 0.3s ease;
+}
+
+.wrapper:hover .bubble {
+  left: 10px;
+}

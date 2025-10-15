@@ -2,6 +2,7 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
+import { Link } from 'react-router-dom';
 
 export default function Navbar_Menu() {
   
@@ -16,15 +17,13 @@ export default function Navbar_Menu() {
             <Nav className="me-auto">
 
               <NavDropdown title="Cruzadas" id="basic-nav-dropdown">
-                
-                <NavDropdown.Item href="#action/3.1">Continuar Cruzada</NavDropdown.Item>
-                <NavDropdown.Item href="#action/3.2">Crear Cruzada</NavDropdown.Item>
-                <NavDropdown.Item href="#action/3.3">Historial de Cruzadas</NavDropdown.Item>
-              
+                <NavDropdown.Item as={Link} to="/">Continuar Cruzada</NavDropdown.Item>
+                <NavDropdown.Item as={Link} to="/Evento">Crear Cruzada</NavDropdown.Item>
+                <NavDropdown.Item as={Link} to="/historial">Historial de Cruzadas</NavDropdown.Item>
               </NavDropdown>
-              
-              <Nav.Link href="#Perfil de usuario">Perfil de usuario</Nav.Link>
-              <Nav.Link href="#Iniciar Sesión">Iniciar Sesión</Nav.Link>
+
+              <Nav.Link as={Link} to="/perfil">Perfil de usuario</Nav.Link>
+              <Nav.Link as={Link} to="/login">Iniciar Sesión</Nav.Link>
       
             </Nav>
           </Navbar.Collapse>
