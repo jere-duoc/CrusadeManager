@@ -9,6 +9,7 @@ import Crear_Cruzada from './App/Crear_Cruzada'
 import Historial from './App/Historial'
 import Jugadores from './App/Jugadores'
 import Placings from './App/Placings'
+import Datasheet from './assets/components/Datasheet'
 
 import './assets/style/App.css';
 import Emparejamiento from "./App/Emparejamiento"
@@ -28,7 +29,7 @@ function App() {
         <Route path="/Jugadores" element={<><Navbar_Evento /><Jugadores /></>} />
         <Route path="/Emparejamiento" element={<><Navbar_Evento /><Emparejamiento /></>} />
         <Route path="/Placings" element={<><Navbar_Evento /><Placings /></>} />
-        <Route path="/Perfil_Usuario" element={<><Navbar_Evento /><Perfil_Usuario /></>} />
+        <Route path="/Perfil_Usuario" element={<><Navbar_Evento /><Perfil_Usuario /><Datasheet /></>} />
       </Routes>
     </>
   )
