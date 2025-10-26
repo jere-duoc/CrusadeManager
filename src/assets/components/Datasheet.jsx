@@ -1,211 +1,411 @@
-import Table from 'react-bootstrap/Table';
-import '../style/App.css'
-import Container from 'react-bootstrap/Container';
+import React, { useState, useEffect } from "react";
+import {
+  Container,
+  Row,
+  Col,
+  Card,
+  Button,
+  Table,
+  Collapse,
+  Form,
+  InputGroup,
+} from "react-bootstrap";
+import data from "../data/Imperium - Astra Militarum - Library.json";
 
-function Datasheet() {
-  /*
-  const M = '10"'
-  const T = 12
-  const SV = "2+"
-  const INVU = NONE
-  const W = 18
-  const LD = "7+"
-  const OC = 7
-  */
+// 💾 Helpers para LocalStorage
+const STORAGE_KEY = "army_roster";
+
+const saveToStorage = (army) => {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(army));
+};
+
+const loadFromStorage = () => {
+  const saved = localStorage.getItem(STORAGE_KEY);
+  return saved ? JSON.parse(saved) : [];
+};
+
+// 💾 Exportar JSON descargable
+const exportJSON = (army) => {
+  const blob = new Blob([JSON.stringify(army, null, 2)], {
+    type: "application/json",
+  });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "mi_ejercito.json";
+  a.click();
+  URL.revokeObjectURL(url);
+};
+
+// 🔹 Card editable con modificadores
+const EditableUnitCard = ({ unit, index, onChange, onRemove, onSave }) => {
+  const [open, setOpen] = useState(false);
+
+  const handleStatChange = (key, value) => {
+    const updatedStats = { ...unit.stats, [key]: value };
+    onChange(index, { ...unit, stats: updatedStats });
+  };
+
+  const handleModifierChange = (key, value) => {
+    const updatedMods = { ...unit.modifiers, [key]: value };
+    onChange(index, { ...unit, modifiers: updatedMods });
+  };
+
+  const handlePointsChange = (value) => {
+    onChange(index, { ...unit, points: Number(value) || 0 });
+  };
+
+  const getTotalStat = (stat) => {
+    const base = parseFloat(unit.stats[stat]) || 0;
+    const mod = parseFloat(unit.modifiers?.[stat]) || 0;
+    return base + mod;
+  };
+
+  return (
+    <Card
+      className="mb-3 shadow-sm bg-dark text-light border-secondary"
+      style={{ backgroundColor: "rgba(33,33,33,0.6)" }}
+    >
+      <Card.Header
+        onClick={() => setOpen(!open)}
+        aria-controls={`unit-${index}`}
+        aria-expanded={open}
+        style={{ cursor: "pointer" }}
+        className="d-flex justify-content-between align-items-center bg-secondary text-white"
+      >
+        <span>
+          <strong>{unit.name}</strong> — {unit.points ?? 0} pts
+        </span>
+        <Button
+          variant="outline-light"
+          size="sm"
+          onClick={(e) => {
+            e.stopPropagation();
+            onRemove(index);
+          }}
+        >
+          ✖
+        </Button>
+      </Card.Header>
+
+      <Collapse in={open}>
+        <div id={`unit-${index}`}>
+          <Card.Body>
+            <h6>Estadísticas y Modificadores</h6>
+            <Form>
+              <Row>
+                {Object.entries(unit.stats).map(([stat, value], i) => (
+                  <Col xs={6} md={3} key={i} className="mb-2">
+                    <Form.Group>
+                      <Form.Label>{stat}</Form.Label>
+                      <Form.Control
+                        type="text"
+                        value={value}
+                        onChange={(e) => handleStatChange(stat, e.target.value)}
+                        className="bg-dark text-light border-secondary"
+                      />
+                      <Form.Text className="text-muted">
+                        Total: {getTotalStat(stat)}
+                      </Form.Text>
+                      <Form.Control
+                        type="number"
+                        placeholder="Modificador"
+                        value={unit.modifiers?.[stat] ?? 0}
+                        onChange={(e) =>
+                          handleModifierChange(stat, e.target.value)
+                        }
+                        className="bg-secondary text-light mt-1"
+                      />
+                    </Form.Group>
+                  </Col>
+                ))}
+                <Col xs={6} md={3} className="mb-2">
+                  <Form.Group>
+                    <Form.Label>Puntos</Form.Label>
+                    <Form.Control
+                      type="number"
+                      min="0"
+                      value={unit.points ?? 0}
+                      onChange={(e) => handlePointsChange(e.target.value)}
+                      className="bg-dark text-light border-secondary"
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+            </Form>
+
+            <Button
+              variant="success"
+              size="sm"
+              className="mt-3"
+              onClick={() => onSave(index)}
+            >
+              💾 Guardar cambios
+            </Button>
+
+            {unit.rangedWeapons.length > 0 && (
+              <>
+                <h6 className="mt-4">Armas a Rango</h6>
+                <Table
+                  striped
+                  bordered
+                  hover
+                  size="sm"
+                  variant="dark"
+                  className="border-secondary"
+                >
+                  <thead>
+                    <tr>
+                      <th>Nombre</th>
+                      <th>Range</th>
+                      <th>A</th>
+                      <th>BS</th>
+                      <th>S</th>
+                      <th>AP</th>
+                      <th>D</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {unit.rangedWeapons.map((w, i) => (
+                      <tr key={i}>
+                        <td>{w.name}</td>
+                        <td>{w.characteristics["Range"]}</td>
+                        <td>{w.characteristics["A"]}</td>
+                        <td>{w.characteristics["BS"]}</td>
+                        <td>{w.characteristics["S"]}</td>
+                        <td>{w.characteristics["AP"]}</td>
+                        <td>{w.characteristics["D"]}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              </>
+            )}
+
+            {unit.meleeWeapons.length > 0 && (
+              <>
+                <h6 className="mt-4">Armas de Combate</h6>
+                <Table
+                  striped
+                  bordered
+                  hover
+                  size="sm"
+                  variant="dark"
+                  className="border-secondary"
+                >
+                  <thead>
+                    <tr>
+                      <th>Nombre</th>
+                      <th>Range</th>
+                      <th>A</th>
+                      <th>WS</th>
+                      <th>S</th>
+                      <th>AP</th>
+                      <th>D</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {unit.meleeWeapons.map((w, i) => (
+                      <tr key={i}>
+                        <td>{w.name}</td>
+                        <td>{w.characteristics["Range"]}</td>
+                        <td>{w.characteristics["A"]}</td>
+                        <td>{w.characteristics["WS"]}</td>
+                        <td>{w.characteristics["S"]}</td>
+                        <td>{w.characteristics["AP"]}</td>
+                        <td>{w.characteristics["D"]}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              </>
+            )}
+          </Card.Body>
+        </div>
+      </Collapse>
+    </Card>
+  );
+};
+
+// 🔹 Catálogo de unidades con buscador
+const UnitCatalogue = ({ onAddUnit }) => {
+  const [units, setUnits] = useState([]);
+  const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    const entries = data.catalogue.sharedSelectionEntries.selectionEntry;
+    const parsed = entries.map((entry) => {
+      const name = entry["@name"];
+      const profiles = entry.profiles?.profile || [];
+      const profileList = Array.isArray(profiles) ? profiles : [profiles];
+
+      const unitProfile = profileList.find((p) => p["@typeName"] === "Unit");
+      const stats = {};
+      if (unitProfile?.characteristics?.characteristic) {
+        unitProfile.characteristics.characteristic.forEach((c) => {
+          stats[c["@name"]] = c["#text"];
+        });
+      }
+
+      const rangedWeapons = [];
+      const meleeWeapons = [];
+      let points = 0;
+
+      profileList.forEach((p) => {
+        if (p["@typeName"]?.includes("Weapons")) {
+          const weapon = { name: p["@name"], characteristics: {} };
+          p.characteristics.characteristic.forEach((c) => {
+            weapon.characteristics[c["@name"]] = c["#text"];
+          });
+          if (p["@typeName"].includes("Melee")) meleeWeapons.push(weapon);
+          else rangedWeapons.push(weapon);
+        }
+        if (p["@name"]?.toLowerCase().includes("points")) {
+          const val = parseInt(p.characteristics.characteristic?.[0]?.["#text"]);
+          if (!isNaN(val)) points = val;
+        }
+      });
+
+      return { name, stats, rangedWeapons, meleeWeapons, points, modifiers: {} };
+    });
+
+    setUnits(parsed.filter((u) => Object.keys(u.stats).length > 0));
+  }, []);
+
+  const filteredUnits = units.filter((u) =>
+    u.name.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
     <>
-      
-                            <div class="col-12 col-md-8 mb-4">
-                                <div class="bg-dark bg-opacity-75 rounded-lg shadow-2xl p-4 text-white">
-                                    <h4 class="mb-3 text-center">Rogal Dorn Battle Tank - LV2</h4>
-                                    <div class="table-responsive">
-                                        <table class="table table-bordered text-center text-white align-middle">
-                                            
-                                            <thead class="table-dark">
-                                                <tr>
-                                                    <td colspan="1">M</td>
-                                                    <td colspan="1">T</td>
-                                                    <td colspan="1">SV</td>
-                                                    <td colspan="2">Invu</td>
-                                                    <td colspan="1">W</td>
-                                                    <td colspan="2">LD</td>
-                                                    <td colspan="1">OC</td>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>10"</td>
-                                                    <td>12</td>
-                                                    <td>2+</td>
-                                                    <td colspan="2">NONE</td>
-                                                    <td>18</td>
-                                                    <td colspan="2">7+</td>
-                                                    <td>5</td>
-                                                </tr>
-                                            </tbody>
+      <h4 className="mb-3 text-light">Catálogo</h4>
+      <InputGroup className="mb-3">
+        <Form.Control
+          placeholder="Buscar unidad..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="bg-dark text-light border-secondary"
+        />
+      </InputGroup>
 
-                                            
-                                            <thead class="table-dark">
-                                                <tr>
-                                                    <th colspan="2">Ranged Weapons</th>
-                                                    <th>Range</th>
-                                                    <th>A</th>
-                                                    <th>BS</th>
-                                                    <th>S</th>
-                                                    <th>AP</th>
-                                                    <th>D</th>
-                                                    <th>Habilidades</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td colspan="2">Castigator Gatling Cannon</td>
-                                                    <td>24"</td>
-                                                    <td>12</td>
-                                                    <td>4+</td>
-                                                    <td>5</td>
-                                                    <td>0</td>
-                                                    <td>1</td>
-                                                    <td>NONE</td>
-                                                </tr>
-                                                <tr>
-                                                    <td colspan="2">Coaxial Autocannon</td>
-                                                    <td>48"</td>
-                                                    <td>2</td>
-                                                    <td>4+</td>
-                                                    <td>9</td>
-                                                    <td>-1</td>
-                                                    <td>3</td>
-                                                    <td>NONE</td>
-                                                </tr>
-                                                <tr>
-                                                    <td colspan="2">Heavy Bolter</td>
-                                                    <td>36"</td>
-                                                    <td>3</td>
-                                                    <td>4+</td>
-                                                    <td>5</td>
-                                                    <td>-1</td>
-                                                    <td>2</td>
-                                                    <td>Sustained Hits 1</td>
-                                                </tr>
-                                                <tr>
-                                                    <td colspan="2">Heavy Stubber</td>
-                                                    <td>36"</td>
-                                                    <td>3</td>
-                                                    <td>4+</td>
-                                                    <td>4</td>
-                                                    <td>0</td>
-                                                    <td>1</td>
-                                                    <td>RAPID FIRE 3</td>
-                                                </tr>
-                                                <tr>
-                                                    <td colspan="2">MeltaGun</td>
-                                                    <td>12"</td>
-                                                    <td>1</td>
-                                                    <td>4+</td>
-                                                    <td>9</td>
-                                                    <td>-4</td>
-                                                    <td>D6</td>
-                                                    <td>Melta 2</td>
-                                                </tr>
-                                                <tr>
-                                                    <td colspan="2">Multi-Melta</td>
-                                                    <td>18"</td>
-                                                    <td>2</td>
-                                                    <td>4+</td>
-                                                    <td>9</td>
-                                                    <td>-4</td>
-                                                    <td>D6</td>
-                                                    <td>Melta 2</td>
-                                                </tr>
-                                                <tr>
-                                                    <td colspan="2">Oppressor Cannon</td>
-                                                    <td>72"</td>
-                                                    <td>D6+3</td>
-                                                    <td>4+</td>
-                                                    <td>12</td>
-                                                    <td>-2</td>
-                                                    <td>3</td>
-                                                    <td>Blast</td>
-                                                </tr>
-                                                <tr>
-                                                    <td colspan="2">Pulveriser Cannon</td>
-                                                    <td>24"</td>
-                                                    <td>D6</td>
-                                                    <td>4+</td>
-                                                    <td>9</td>
-                                                    <td>-3</td>
-                                                    <td>3</td>
-                                                    <td>Blast</td>
-                                                </tr>
-                                                <tr>
-                                                    <td colspan="2">Oppressor Cannon</td>
-                                                    <td>48"</td>
-                                                    <td>D6+3</td>
-                                                    <td>4+</td>
-                                                    <td>10</td>
-                                                    <td>-1</td>
-                                                    <td>3</td>
-                                                    <td>Blast, Twin-Linked</td>
-                                                </tr>
-                                            </tbody>
-
-                                            
-                                            <thead class="table-dark">
-                                                <tr>
-                                                    <th colspan="2">Melee Weapons</th>
-                                                    <th>Range</th>
-                                                    <th>A</th>
-                                                    <th>BS</th>
-                                                    <th>S</th>
-                                                    <th>AP</th>
-                                                    <th>D</th>
-                                                    <th>Habilidades</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td colspan="2">Armoured Tracks</td>
-                                                    <td>NONE</td>
-                                                    <td>6</td>
-                                                    <td>4+</td>
-                                                    <td>7</td>
-                                                    <td>0</td>
-                                                    <td>1</td>
-                                                    <td>NONE</td>
-                                                </tr>
-                                            </tbody>
-
-                                            
-                                            <thead class="table-dark">
-                                                <tr>
-                                                    <th colspan="3">Habilidades de unidad</th>
-                                                    <th colspan="6">Mejoras de Cruzada</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td colspan="3"><strong>Ablative Plating:</strong> Once per battle,
-                                                        when an attack is allocated to this model, you change the Damage
-                                                        characteristic of that attack to 0.</td>
-                                                    <td colspan="6"><strong>BT: WELL-DRILLED CREW</strong> Ranged
-                                                        weapons equipped by models in this unit have the [assault]
-                                                        ability.</td>
-                                                </tr>
-                                                <tr>
-                                                    <td colspan="2" class="text-start"><strong>Faction:</strong> Astra
-                                                        Militarum</td>
-                                                    <td colspan="7" class="text-start"><strong>Keywords:</strong>
-                                                        Imperium, Vehicle, Squadron, Smoke</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        
+      <div style={{ maxHeight: "80vh", overflowY: "auto" }}>
+        {filteredUnits.map((unit, idx) => (
+          <Card
+            key={idx}
+            className="mb-2 text-center bg-dark text-light border-secondary shadow-sm"
+            style={{ cursor: "pointer" }}
+            onClick={() => onAddUnit(unit)}
+          >
+            <Card.Body>
+              <Card.Title>{unit.name}</Card.Title>
+              <Card.Text style={{ fontSize: "0.85rem" }}>
+                {Object.entries(unit.stats)
+                  .map(([k, v]) => `${k}: ${v}`)
+                  .join(" | ")}
+              </Card.Text>
+            </Card.Body>
+          </Card>
+        ))}
+      </div>
     </>
-  )
-}
+  );
+};
 
-export default Datasheet
+// 🔹 Roster principal con localStorage y exportación
+const ArmyBuilder = () => {
+  const [army, setArmy] = useState([]);
+
+  useEffect(() => {
+    setArmy(loadFromStorage());
+  }, []);
+
+  const addUnit = (unit) => {
+    const updated = [...army, { ...unit }];
+    setArmy(updated);
+    saveToStorage(updated);
+  };
+
+  const updateUnit = (index, updatedUnit) => {
+    const newArmy = [...army];
+    newArmy[index] = updatedUnit;
+    setArmy(newArmy);
+  };
+
+  const saveUnit = (index) => {
+    const newArmy = [...army];
+    newArmy[index].lastSaved = new Date().toISOString();
+    setArmy(newArmy);
+    saveToStorage(newArmy);
+  };
+
+  const removeUnit = (index) => {
+    const newArmy = [...army];
+    newArmy.splice(index, 1);
+    setArmy(newArmy);
+    saveToStorage(newArmy);
+  };
+
+  const totalPoints = army.reduce(
+    (sum, u) => sum + (Number(u.points) || 0),
+    0
+  );
+
+  return (
+    <div
+      style={{
+        minHeight: "100vh",
+        backgroundColor: "rgba(0, 0, 0, 0.6)",
+        color: "white",
+        backdropFilter: "blur(3px)",
+        paddingTop: "1rem",
+      }}
+    ><br /><br />
+      <Container fluid>
+        <Row>
+          {/* Catálogo */}
+          <Col md={4} className="border-end border-secondary">
+            <UnitCatalogue onAddUnit={addUnit} />
+          </Col>
+
+          {/* Roster */}
+          <Col md={8}>
+            <div className="d-flex justify-content-between align-items-center mb-3">
+              <h4>Mi Lista de Ejército</h4>
+              <div>
+                <Button
+                  variant="outline-info"
+                  size="sm"
+                  className="me-2"
+                  onClick={() => exportJSON(army)}
+                >
+                  📤 Exportar JSON
+                </Button>
+                <h5 className="d-inline text-info">
+                  Total: {totalPoints} pts
+                </h5>
+              </div>
+            </div>
+
+            {army.length === 0 ? (
+              <p className="text-muted">Aún no has agregado unidades.</p>
+            ) : (
+              army.map((unit, index) => (
+                <EditableUnitCard
+                  key={index}
+                  index={index}
+                  unit={unit}
+                  onChange={updateUnit}
+                  onRemove={removeUnit}
+                  onSave={saveUnit}
+                />
+              ))
+            )}
+          </Col>
+        </Row>
+      </Container>
+    </div>
+    
+  );
+};
+
+export default ArmyBuilder;

@@ -6,12 +6,10 @@ import Login from './App/Login'
 import Evento from './App/Evento'
 import Perfil_Usuario from './App/Perfil_Usuario'
 import Crear_Cruzada from './App/Crear_Cruzada'
-import Historial from './App/Historial'
+import HistorialCruzadas from './App/HistorialCruzadas'
 import Jugadores from './App/Jugadores'
 import Placings from './App/Placings'
-import Datasheet from './assets/components/Datasheet'
-
-import './assets/style/App.css';
+import ArmyBuilder from './assets/components/Datasheet'
 import Emparejamiento from "./App/Emparejamiento"
 
 function App() {
@@ -21,7 +19,7 @@ function App() {
       <Routes>
         <Route path="/" element={<><Navbar_Menu /><Home /></>} />
         <Route path="/Crear_Cruzada" element={<><Navbar_Menu /><Crear_Cruzada/></>} />
-        <Route path="/Historial" element={<><Navbar_Menu /><Historial/></>} />
+        <Route path="/Historial" element={<><Navbar_Menu /><HistorialCruzadas/></>} />
         <Route path="/Perfil" element={<><Navbar_Menu /><Perfil_Usuario /></>} />
         <Route path="/Login" element={<><Navbar_Menu /><Login /></>} />
 
@@ -29,7 +27,8 @@ function App() {
         <Route path="/Jugadores" element={<><Navbar_Evento /><Jugadores /></>} />
         <Route path="/Emparejamiento" element={<><Navbar_Evento /><Emparejamiento /></>} />
         <Route path="/Placings" element={<><Navbar_Evento /><Placings /></>} />
-        <Route path="/Perfil_Usuario" element={<><Navbar_Evento /><Perfil_Usuario /><Datasheet /></>} />
+        <Route path="/Perfil_Usuario" element={<><Navbar_Evento /><Perfil_Usuario /></>} />
+        <Route path="/roster" element={<><Navbar_Evento /><ArmyBuilder /></>} />
       </Routes>
     </>
   )

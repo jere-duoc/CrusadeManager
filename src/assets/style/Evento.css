@@ -1,0 +1,12 @@
+.evento-bg {
+  background-color: rgba(0, 0, 0, 0.6); /* fondo negro con 0.6 de transparencia */
+  background-size: cover;
+  background-position: center;
+}
+
+.crear-evento-bg {
+  background-color: rgba(0, 0, 0, 0.6); /* fondo negro con 0.6 de transparencia */
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh;
+}

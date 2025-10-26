@@ -3,7 +3,7 @@ body {
   /* Allow the page to grow and be scrollable instead of fixing to viewport height */
   min-height: 100vh;
   background:
-    linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)),
+    linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.6)),
     /*Para que la imagen se oscurezca*/
     url('../img/fondo.jpg') no-repeat center center fixed;
   background-size: cover;
