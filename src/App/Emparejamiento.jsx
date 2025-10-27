@@ -1,185 +1,113 @@
+import { useState, useEffect } from "react";
+
 export default function Emparejamiento() {
+  const [rondaActual, setRondaActual] = useState(1);
+  const [matches, setMatches] = useState(() => {
+    const guardado = localStorage.getItem("matches");
+    if (guardado) return JSON.parse(guardado);
+
+    return [
+      { mesa: 1, jugadorA: "Jugador 1", jugadorB: "Jugador 2", resultado: "" },
+      { mesa: 2, jugadorA: "Jugador 3", jugadorB: "Jugador 4", resultado: "" },
+    ];
+  });
+
+  useEffect(() => {
+    localStorage.setItem("matches", JSON.stringify(matches));
+  }, [matches]);
+
+  function actualizarResultado(idx, valor) {
+    const copia = [...matches];
+    copia[idx].resultado = valor;
+    setMatches(copia);
+  }
+
+  function handleGuardar() {
+    alert("Resultados guardados para la ronda " + rondaActual);
+  }
 
   return (
-    <>
-      <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-12">
-                <div class="contenido">
-                    
-                        <h2 class="text-center mb-4">Emparejamientos - Cruzada Warhammer 40K</h2>
-
-                        <div class="table-responsive">
-                            <table class="table table-dark text-center align-middle">
-                                <tbody>
-                                    <tr>
-                                        <td class="col-12 col-md-6">
-                                            <div class="jugador-box">
-                                                <div class="jugador-info">
-                                                    <div class="jugador">Marcus Veld</div>
-                                                    <a href="#" class="roster-link">roster</a>
-                                                </div>
-                                                <div class="faccion-box">Space Marines</div>
-                                            </div>
-                                        </td>
-                                        <td class="col-12 col-md-6">
-                                            <div class="jugador-box">
-                                                <div class="jugador-info">
-                                                    <div class="jugador">Alyra Dorne</div>
-                                                    <a href="#" class="roster-link">roster</a>
-                                                </div>
-                                                <div class="faccion-box">Astra Militarum</div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="col-12 col-md-6">
-                                            <div class="jugador-box">
-                                                <div class="jugador-info">
-                                                    <div class="jugador">Kairon Thule</div>
-                                                    <a href="#" class="roster-link">roster</a>
-                                                </div>
-                                                <div class="faccion-box">Tyranids</div>
-                                            </div>
-                                        </td>
-                                        <td class="col-12 col-md-6">
-                                            <div class="jugador-box">
-                                                <div class="jugador-info">
-                                                    <div class="jugador">Selene Voss</div>
-                                                    <a href="#" class="roster-link">roster</a>
-                                                </div>
-                                                <div class="faccion-box">Eldar Craftworlds</div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="col-12 col-md-6">
-                                            <div class="jugador-box">
-                                                <div class="jugador-info">
-                                                    <div class="jugador">Darius Holt</div>
-                                                    <a href="#" class="roster-link">roster</a>
-                                                </div>
-                                                <div class="faccion-box">Orks</div>
-                                            </div>
-                                        </td>
-                                        <td class="col-12 col-md-6">
-                                            <div class="jugador-box">
-                                                <div class="jugador-info">
-                                                    <div class="jugador">Isolde Kaine</div>
-                                                    <a href="#" class="roster-link">roster</a>
-                                                </div>
-                                                <div class="faccion-box">Chaos Space Marines</div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="col-12 col-md-6">
-                                            <div class="jugador-box">
-                                                <div class="jugador-info">
-                                                    <div class="jugador">Lucian Kreel</div>
-                                                    <a href="#" class="roster-link">roster</a>
-                                                </div>
-                                                <div class="faccion-box">Necrons</div>
-                                            </div>
-                                        </td>
-                                        <td class="col-12 col-md-6">
-                                            <div class="jugador-box">
-                                                <div class="jugador-info">
-                                                    <div class="jugador">Thalia Morven</div>
-                                                    <a href="#" class="roster-link">roster</a>
-                                                </div>
-                                                <div class="faccion-box">Tau Empire</div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="col-12 col-md-6">
-                                            <div class="jugador-box">
-                                                <div class="jugador-info">
-                                                    <div class="jugador">Severin Drask</div>
-                                                    <a href="#" class="roster-link">roster</a>
-                                                </div>
-                                                <div class="faccion-box">Dark Eldar</div>
-                                            </div>
-                                        </td>
-                                        <td class="col-12 col-md-6">
-                                            <div class="jugador-box">
-                                                <div class="jugador-info">
-                                                    <div class="jugador">Mira Castell</div>
-                                                    <a href="#" class="roster-link">roster</a>
-                                                </div>
-                                                <div class="faccion-box">Adepta Sororitas</div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="col-12 col-md-6">
-                                            <div class="jugador-box">
-                                                <div class="jugador-info">
-                                                    <div class="jugador">Orlan Veyl</div>
-                                                    <a href="#" class="roster-link">roster</a>
-                                                </div>
-                                                <div class="faccion-box">Genestealer Cults</div>
-                                            </div>
-                                        </td>
-                                        <td class="col-12 col-md-6">
-                                            <div class="jugador-box">
-                                                <div class="jugador-info">
-                                                    <div class="jugador">Cassandra Wren</div>
-                                                    <a href="#" class="roster-link">roster</a>
-                                                </div>
-                                                <div class="faccion-box">Death Guard</div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="col-12 col-md-6">
-                                            <div class="jugador-box">
-                                                <div class="jugador-info">
-                                                    <div class="jugador">Varik Tor</div>
-                                                    <a href="#" class="roster-link">roster</a>
-                                                </div>
-                                                <div class="faccion-box">Imperial Knights</div>
-                                            </div>
-                                        </td>
-                                        <td class="col-12 col-md-6">
-                                            <div class="jugador-box">
-                                                <div class="jugador-info">
-                                                    <div class="jugador">Elara Quinn</div>
-                                                    <a href="#" class="roster-link">roster</a>
-                                                </div>
-                                                <div class="faccion-box">Harlequins</div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="col-12 col-md-6">
-                                            <div class="jugador-box">
-                                                <div class="jugador-info">
-                                                    <div class="jugador">Tobias Karr</div>
-                                                    <a href="#" class="roster-link">roster</a>
-                                                </div>
-                                                <div class="faccion-box">Adeptus Mechanicus</div>
-                                            </div>
-                                        </td>
-                                        <td class="col-12 col-md-6">
-                                            <div class="jugador-box">
-                                                <div class="jugador-info">
-                                                    <div class="jugador">Nyssa Dray</div>
-                                                    <a href="#" class="roster-link">roster</a>
-                                                </div>
-                                                <div class="faccion-box">Chaos Daemons</div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                    </div>
+    <div
+      style={{
+        backgroundColor: "rgba(0, 0, 0, 0.6)", // Fondo oscuro translúcido
+        minHeight: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: "20px",
+      }}
+    >
+      <div className="container">
+        <div className="row justify-content-center">
+          <div className="col-12 col-md-10 col-lg-8">
+            <div className="card bg-dark bg-opacity-75 text-white shadow-lg p-4 rounded-4">
+              <div className="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4">
+                <div className="text-center text-md-start mb-3 mb-md-0">
+                  <h2 className="mb-1">Emparejamientos</h2>
+                  <p className="text-muted">
+                    Registra resultados de la ronda en curso.
+                  </p>
                 </div>
+
+                <div className="ronda-box text-center text-md-end">
+                  <label className="fw-bold">
+                    Ronda:&nbsp;
+                    <input
+                      type="number"
+                      min={1}
+                      value={rondaActual}
+                      onChange={(e) => setRondaActual(Number(e.target.value))}
+                      className="form-control d-inline-block w-auto text-center bg-secondary text-white border-0"
+                    />
+                  </label>
+                </div>
+              </div>
+
+              <div className="table-responsive">
+                <table className="table table-dark table-hover align-middle text-center mb-4">
+                  <thead>
+                    <tr>
+                      <th>Mesa</th>
+                      <th>Jugador A</th>
+                      <th>Jugador B</th>
+                      <th>Resultado</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {matches.map((m, i) => (
+                      <tr key={m.mesa}>
+                        <td>{m.mesa}</td>
+                        <td>{m.jugadorA}</td>
+                        <td>{m.jugadorB}</td>
+                        <td>
+                          <input
+                            type="text"
+                            value={m.resultado}
+                            placeholder="2-1 / 1-1 / etc"
+                            onChange={(e) =>
+                              actualizarResultado(i, e.target.value)
+                            }
+                            className="form-control text-center bg-secondary text-white border-0"
+                          />
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              <div className="text-center">
+                <button
+                  className="btn btn-outline-light btn-lg mt-2"
+                  onClick={handleGuardar}
+                >
+                  Guardar Resultados
+                </button>
+              </div>
             </div>
+          </div>
         </div>
-    </>
-    )
+      </div>
+    </div>
+  );
 }

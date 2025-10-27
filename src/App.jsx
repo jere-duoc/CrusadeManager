@@ -1,6 +1,8 @@
 import { Routes, Route } from "react-router-dom"
 import Navbar_Menu from './assets/components/Navbar_menu'
 import Navbar_Evento from './assets/components/Navbar_Evento'
+import Register from './App/Register'
+import HomeLog from './App/HomeLog'
 import Home from './App/Home'
 import Login from './App/Login'
 import Evento from './App/Evento'
@@ -22,6 +24,8 @@ function App() {
         <Route path="/Historial" element={<><Navbar_Menu /><HistorialCruzadas/></>} />
         <Route path="/Perfil" element={<><Navbar_Menu /><Perfil_Usuario /></>} />
         <Route path="/Login" element={<><Navbar_Menu /><Login /></>} />
+        <Route path="/register" element={<><Navbar_Menu /><Register /></>} />
+        <Route path="/home-log" element={<><Navbar_Menu /><HomeLog /></>} />
 
         <Route path="/Evento" element={<><Navbar_Evento /><Evento /></>} />
         <Route path="/Jugadores" element={<><Navbar_Evento /><Jugadores /></>} />

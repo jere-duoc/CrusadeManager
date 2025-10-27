@@ -1,73 +1,105 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext.jsx";
 
-const Register = () => {
+import '../assets/style_nuevo/index.css';
+import '../assets/style_nuevo/styles.css';
 
-  const [formData, setFormData] = useState({
-    nombre: "",
-    email: "",
-    password: ""
-  });
+export default function Register() {
+  const [nombre, setNombre] = useState("");
+  const [email, setEmail] = useState("");
+  const [pass, setPass] = useState("");
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  const [error, setError] = useState("");
+
+  const { registrar } = useAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Datos del registro", formData);
-    alert("Registro simulado correctamente");
-  }
+
+    try {
+      if (!nombre || !email || !pass)
+        throw new Error("Completa todos los campos.");
+
+      if (pass.length < 6)
+        throw new Error("La contraseña debe tener al menos 6 caracteres.");
+
+      registrar(nombre, email, pass);
+
+      alert("Cuenta creada. Ahora inicia sesión.");
+      navigate("/login");
+    } catch (err) {
+      setError(err.message);
+    }
+  };
 
   return (
-    <div className="container mt-5" style={{ maxWidth: "400px" }}>
-      <h2 className="text-center mb-4">Registro de Usuario</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label className="form-label">Nombre</label>
-          <input
-            type="text"
-            name="nombre"
-            className="form-control"
-            placeholder="Ingresa tu nombre"
-            value={formData.nombre}
-            onChange={handleChange}
-            required
-          />
-        </div>
+    <div className="d-flex justify-content-center align-items-center vh-100 bg-dark bg-opacity-25">
+      <section
+        className="card p-4 shadow-lg text-light bg-secondary bg-opacity-50"
+        style={{ maxWidth: "400px", borderRadius: "20px" }}
+      >
+        <h2 className="text-center mb-3 fw-bold">Crear Cuenta</h2>
+        <p>
+          Únete a las cruzadas, registra tu ejército y escala en el ranking.
+        </p>
 
-        <div className="mb-3">
-          <label className="form-label">Correo electrónico</label>
-          <input
-            type="email"
-            name="email"
-            className="form-control"
-            placeholder="Ingresa tu correo"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-        </div>
+        <form onSubmit={handleSubmit} className="form auth-form">
+          <div className="mb-3">
+            <label className="form-label">Nombre</label>
+            <input
+              type="text"
+              className="form-control bg-dark text-light border-0"
+              placeholder="Ej. Inquisidor Valeria"
+              value={nombre}
+              onChange={(e) => setNombre(e.target.value)}
+              required
+            />
+          </div>
 
-        <div className="mb-3">
-          <label className="form-label">Contraseña</label>
-          <input
-            type="password"
-            name="password"
-            className="form-control"
-            placeholder="Crea una contraseña"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
-        </div>
+          <div className="mb-3">
+            <label className="form-label">Correo</label>
+            <input
+              type="email"
+              className="form-control bg-dark text-light border-0"
+              placeholder="ejemplo@crusade.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
 
-        <button className="btn btn-success w-100" type="submit">
-          Registrarse
-        </button>
-      </form>
+          <div className="mb-3">
+            <label className="form-label">Contraseña</label>
+            <input
+              type="password"
+              className="form-control bg-dark text-light border-0"
+              placeholder="Mínimo 6 caracteres"
+              value={pass}
+              onChange={(e) => setPass(e.target.value)}
+              required
+            />
+          </div>
+
+          {error && (
+            <p className="text-danger text-center fw-semibold">{error}</p>
+          )}
+
+          <div className="d-grid mt-3">
+            <button className="btn btn-outline-light fw-semibold" type="submit">
+              Registrarme
+            </button>
+          </div>
+        </form>
+
+        <p className="text-center mt-4 text-light">
+          ¿Ya tienes cuenta?{" "}
+          <Link to="/login" className="link-light text-decoration-underline">
+            Inicia sesión
+          </Link>
+        </p>
+      </section>
     </div>
   );
-};
-
-export default Register;
+}
