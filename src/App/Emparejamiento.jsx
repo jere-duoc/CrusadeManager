@@ -29,7 +29,7 @@ export default function Emparejamiento() {
   return (
     <div
       style={{
-        backgroundColor: "rgba(0, 0, 0, 0.6)", // Fondo oscuro translúcido
+        backgroundColor: "rgba(0, 0, 0, 0.6)", 
         minHeight: "100vh",
         display: "flex",
         justifyContent: "center",

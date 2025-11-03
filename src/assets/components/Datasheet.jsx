@@ -12,7 +12,6 @@ import {
 } from "react-bootstrap";
 import data from "../data/Imperium - Astra Militarum - Library.json";
 
-// 💾 Helpers para LocalStorage
 const STORAGE_KEY = "army_roster";
 
 const saveToStorage = (army) => {
@@ -24,7 +23,6 @@ const loadFromStorage = () => {
   return saved ? JSON.parse(saved) : [];
 };
 
-// 💾 Exportar JSON descargable
 const exportJSON = (army) => {
   const blob = new Blob([JSON.stringify(army, null, 2)], {
     type: "application/json",
@@ -37,7 +35,6 @@ const exportJSON = (army) => {
   URL.revokeObjectURL(url);
 };
 
-// 🔹 Card editable con modificadores
 const EditableUnitCard = ({ unit, index, onChange, onRemove, onSave }) => {
   const [open, setOpen] = useState(false);
 
@@ -227,7 +224,6 @@ const EditableUnitCard = ({ unit, index, onChange, onRemove, onSave }) => {
   );
 };
 
-// 🔹 Catálogo de unidades con buscador
 const UnitCatalogue = ({ onAddUnit }) => {
   const [units, setUnits] = useState([]);
   const [search, setSearch] = useState("");
@@ -311,7 +307,6 @@ const UnitCatalogue = ({ onAddUnit }) => {
   );
 };
 
-// 🔹 Roster principal con localStorage y exportación
 const ArmyBuilder = () => {
   const [army, setArmy] = useState([]);
 
@@ -362,12 +357,12 @@ const ArmyBuilder = () => {
     ><br /><br />
       <Container fluid>
         <Row>
-          {/* Catálogo */}
+          
           <Col md={4} className="border-end border-secondary">
             <UnitCatalogue onAddUnit={addUnit} />
           </Col>
 
-          {/* Roster */}
+          
           <Col md={8}>
             <div className="d-flex justify-content-between align-items-center mb-3">
               <h4>Mi Lista de Ejército</h4>
@@ -378,7 +373,7 @@ const ArmyBuilder = () => {
                   className="me-2"
                   onClick={() => exportJSON(army)}
                 >
-                  📤 Exportar JSON
+                  Exportar JSON
                 </Button>
                 <h5 className="d-inline text-info">
                   Total: {totalPoints} pts

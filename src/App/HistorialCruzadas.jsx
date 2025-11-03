@@ -41,7 +41,7 @@ export default function HistorialCruzadas() {
     },
   ];
 
-  // Filtro por búsqueda
+  
   const cruzadasFiltradas = cruzadas.filter((c) =>
     c.nombre.toLowerCase().includes(busqueda.toLowerCase())
   );
@@ -49,7 +49,7 @@ export default function HistorialCruzadas() {
   return (
     <div className="historial-bg min-vh-100 d-flex flex-column justify-content-center py-5">
       <div className="container text-white">
-        {/* Botón volver */}
+        
         <div className="d-flex justify-content-start mb-4">
           <button
             className="btn btn-outline-light rounded-pill px-4 fw-bold"
@@ -59,7 +59,7 @@ export default function HistorialCruzadas() {
           </button>
         </div>
 
-        {/* Título y buscador */}
+        
         <div className="text-center mb-5">
           <h2 className="fw-bold mb-3">Historial de Cruzadas</h2>
           <input
@@ -71,7 +71,7 @@ export default function HistorialCruzadas() {
           />
         </div>
 
-        {/* Contenedor deslizable */}
+        
         <div className="scroll-container">
           {cruzadasFiltradas.length > 0 ? (
             cruzadasFiltradas.map((cruzada) => (

@@ -4,7 +4,7 @@ export default function Placings() {
   return (
     <div
       style={{
-        backgroundColor: "rgba(0, 0, 0, 0.6)", // Fondo oscuro con 0.6 de opacidad
+        backgroundColor: "rgba(0, 0, 0, 0.6)", 
         minHeight: "100vh",
         display: "flex",
         justifyContent: "center",

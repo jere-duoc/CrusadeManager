@@ -5,14 +5,12 @@ import { useNavigate } from "react-router-dom";
 const Perfil_Usuario = () => {
   const navigate = useNavigate();
 
-  // Datos del usuario
   const [userData, setUserData] = useState({
     name: "Juan Pérez",
     email: "juan.perez@example.com",
     avatar: "https://via.placeholder.com/150",
   });
 
-  // Cambiar foto
   const handleChangeAvatar = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -25,11 +23,11 @@ const Perfil_Usuario = () => {
   };
 
   const handleLogout = () => {
-    navigate("/"); // Redirige al Home
+    navigate("/"); 
   };
 
   const handleViewRoster = () => {
-    navigate("/roster"); // Redirige al roster
+    navigate("/roster"); 
   };
 
   return (
@@ -75,7 +73,6 @@ const Perfil_Usuario = () => {
         <h4 className="fw-bold">{userData.name}</h4>
         <p className="text-muted mb-4">{userData.email}</p>
 
-        {/* Botones centrados */}
         <div className="d-flex flex-column align-items-center w-100 gap-3">
           <button
             className="btn btn-primary w-75"

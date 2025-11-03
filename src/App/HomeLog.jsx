@@ -19,7 +19,6 @@ export default function IndexPage() {
                 Registra partidas, emparejamientos y posiciones sin usar papel.
               </p>
 
-              {/* Estadísticas rápidas */}
               <div className="row text-center mb-4">
                 <div className="col-6 col-md-6">
                   <div className="stat-box p-3 rounded-3 bg-secondary bg-opacity-25">
@@ -35,14 +34,13 @@ export default function IndexPage() {
                 </div>
               </div>
 
-              {/* Menú de acceso rápido */}
               <div className="row g-3">
                 <div className="col-12 col-md-4">
                   <Link
                     to="/emparejamiento"
                     className="menu-card d-block text-decoration-none p-3 rounded-4 bg-dark bg-opacity-50 hover-glow"
                   >
-                    <h3 className="fw-bold text-white">⚔️ Emparejamientos</h3>
+                    <h3 className="fw-bold text-white">Emparejamientos</h3>
                     <p>
                       Genera y registra las partidas de la ronda actual.
                     </p>
@@ -54,7 +52,7 @@ export default function IndexPage() {
                     to="/jugadores"
                     className="menu-card d-block text-decoration-none p-3 rounded-4 bg-dark bg-opacity-50 hover-glow"
                   >
-                    <h3 className="fw-bold text-white">👥 Jugadores</h3>
+                    <h3 className="fw-bold text-white">Jugadores</h3>
                     <p>
                       Consulta facciones, poder de ejército y estado.
                     </p>

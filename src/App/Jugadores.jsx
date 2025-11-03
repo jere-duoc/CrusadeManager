@@ -21,7 +21,7 @@ export default function Jugadores() {
     <div
       className="d-flex justify-content-center align-items-center vh-100"
       style={{
-        backgroundColor: "rgba(0, 0, 0, 0.6)", // Fondo oscuro 0.6
+        backgroundColor: "rgba(0, 0, 0, 0.6)", 
         width: "100%",
         minHeight: "100vh",
         padding: "20px",
