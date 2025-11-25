@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom"
-import Navbar_Menu from './assets/components/Navbar_menu'
+import Navbar_Menu from './assets/components/Navbar_Menu'
 import Navbar_Evento from './assets/components/Navbar_Evento'
 import Register from './App/Register'
 import HomeLog from './App/HomeLog'

@@ -13,7 +13,7 @@ export default function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!email || !pass) {
@@ -21,7 +21,7 @@ export default function Login() {
       return;
     }
 
-    const ok = login(email, pass);
+    const ok = await login(email, pass);
 
     if (!ok) {
       setError("Credenciales incorrectas.");

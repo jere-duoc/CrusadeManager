@@ -15,7 +15,7 @@ export default function Register() {
   const { registrar } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
@@ -25,7 +25,7 @@ export default function Register() {
       if (pass.length < 6)
         throw new Error("La contraseña debe tener al menos 6 caracteres.");
 
-      registrar(nombre, email, pass);
+      await registrar(nombre, email, pass);
 
       alert("Cuenta creada. Ahora inicia sesión.");
       navigate("/login");
