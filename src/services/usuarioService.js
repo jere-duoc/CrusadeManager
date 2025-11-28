@@ -5,7 +5,7 @@ export async function registrarUsuario(nombre, email, pass) {
       body: JSON.stringify({
         name: nombre,
         email: email,
-        avatar: null,  // editar para agregar el avatar
+        avatar: null,
         password: pass,
       }),
     });

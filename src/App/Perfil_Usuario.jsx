@@ -1,33 +1,42 @@
-import React, { useState } from "react";
+import React from "react"; // Ya no necesitamos useState para los datos
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const Perfil_Usuario = () => {
   const navigate = useNavigate();
+  
+  const { usuario, logout, updateUser } = useAuth();
 
-  const [userData, setUserData] = useState({
-    name: "Juan Pérez",
-    email: "juan.perez@example.com",
-    avatar: "https://via.placeholder.com/150",
-  });
+  if (!usuario) return null;
 
   const handleChangeAvatar = (event) => {
     const file = event.target.files[0];
     if (file) {
+      // FileReader convierte la imagen en texto (Base64)
       const reader = new FileReader();
+      
       reader.onload = () => {
-        setUserData({ ...userData, avatar: reader.result });
+        const imagenEnTexto = reader.result; 
+        
+        updateUser({ avatar: imagenEnTexto });
       };
+      
       reader.readAsDataURL(file);
     }
   };
 
   const handleLogout = () => {
-    navigate("/"); 
+    logout();
+    navigate("/");
+  };
+
+  const handleClose = () => {
+    navigate(-1);
   };
 
   const handleViewRoster = () => {
-    navigate("/roster"); 
+    navigate("/roster");
   };
 
   return (
@@ -36,7 +45,7 @@ const Perfil_Usuario = () => {
       style={{ backgroundColor: "rgba(18, 18, 18, 0.6)" }}
     >
       <div
-        className="card shadow-lg p-5 text-center bg-dark text-white d-flex flex-column align-items-center"
+        className="card position-relative shadow-lg p-5 text-center bg-dark text-white d-flex flex-column align-items-center"
         style={{
           maxWidth: "400px",
           width: "90%",
@@ -44,10 +53,18 @@ const Perfil_Usuario = () => {
           boxShadow: "0 8px 25px rgba(0,0,0,0.6)",
         }}
       >
-        {/* Foto editable */}
+        <button
+          type="button"
+          className="btn-close btn-close-white position-absolute top-0 end-0 m-3"
+          aria-label="Close"
+          onClick={handleClose}
+        ></button>
+
+        {/* Foto de perfil */}
         <div className="position-relative mb-4">
           <img
-            src={userData.avatar}
+            // 3. LEEMOS LA FOTO REAL (O EL PLACEHOLDER SI ES NUEVO)
+            src={usuario.avatar || "https://via.placeholder.com/150"}
             alt="Foto de perfil"
             className="rounded-circle mx-auto d-block"
             style={{
@@ -60,31 +77,26 @@ const Perfil_Usuario = () => {
             onMouseOver={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
             onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
           />
+          
+          {/* Input invisible para subir foto */}
           <input
             type="file"
             accept="image/*"
             onChange={handleChangeAvatar}
-            className="position-absolute top-100 start-50 translate-middle opacity-0"
-            style={{ width: "130px", cursor: "pointer" }}
+            className="position-absolute top-0 start-0 w-100 h-100 opacity-0"
+            style={{ cursor: "pointer" }}
+            title="Cambiar foto de perfil"
           />
         </div>
 
-        {/* Nombre y correo */}
-        <h4 className="fw-bold">{userData.name}</h4>
-        <p className="text-muted mb-4">{userData.email}</p>
+        {/* 4. NOMBRE Y CORREO REALES */}
+        <h4 className="fw-bold">{usuario.name}</h4>
+        <p className="text-muted mb-4">{usuario.email}</p>
 
         <div className="d-flex flex-column align-items-center w-100 gap-3">
           <button
             className="btn btn-primary w-75"
             style={{ transition: "all 0.3s" }}
-            onMouseOver={(e) => {
-              e.currentTarget.style.backgroundColor = "#0056b3";
-              e.currentTarget.style.transform = "scale(1.05)";
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.backgroundColor = "";
-              e.currentTarget.style.transform = "scale(1)";
-            }}
             onClick={handleViewRoster}
           >
             Ver Roster
@@ -93,14 +105,6 @@ const Perfil_Usuario = () => {
           <button
             className="btn btn-secondary w-75"
             style={{ transition: "all 0.3s" }}
-            onMouseOver={(e) => {
-              e.currentTarget.style.backgroundColor = "#6c757d";
-              e.currentTarget.style.transform = "scale(1.05)";
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.backgroundColor = "";
-              e.currentTarget.style.transform = "scale(1)";
-            }}
             onClick={handleLogout}
           >
             Cerrar sesión
@@ -112,4 +116,3 @@ const Perfil_Usuario = () => {
 };
 
 export default Perfil_Usuario;
-
