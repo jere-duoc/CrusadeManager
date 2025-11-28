@@ -3,49 +3,31 @@ import { createContext, useContext, useEffect, useState } from "react";
 const DataContext = createContext();
 
 export function DataProvider({ children }) {
+  // 1. Mantenemos el estado (la memoria RAM de la app)
   const [jugadores, setJugadores] = useState([]);
   const [cruzadas, setCruzadas] = useState([]);
   const [loadingData, setLoadingData] = useState(true);
 
-  const MOCKABLE_URL = "https://demo1234567.mockable.io/datos"; 
+  // BORRADO: const MOCKABLE_URL = ... (Ya no lo necesitamos)
 
   useEffect(() => {
+    // 2. Intentamos recuperar lo que haya guardado en el navegador
     const localJug = JSON.parse(localStorage.getItem("jugadores"));
     const localCruz = JSON.parse(localStorage.getItem("cruzadas"));
 
-    if (localJug && localCruz) {
-      setJugadores(localJug);
-      setCruzadas(localCruz);
-      setLoadingData(false);
+    if (localJug || localCruz) {
+      // Si hay algo guardado, lo usamos
+      setJugadores(localJug || []);
+      setCruzadas(localCruz || []);
     } else {
-      fetchDatos();
+      // 3. CAMBIO IMPORTANTE: Si no hay datos locales, NO hacemos fetch.
+      // Simplemente iniciamos con listas vacías y quitamos el "cargando".
+      console.log("Iniciando con datos vacíos (esperando backend real)");
+      setJugadores([]);
+      setCruzadas([]);
     }
+    setLoadingData(false);
   }, []);
-
-  async function fetchDatos() {
-    try {
-      const res = await fetch(MOCKABLE_URL);
-      if (!res.ok) throw new Error("No se pudo obtener datos");
-      const data = await res.json();
-
-      const jugadoresMock = Array.isArray(data.jugadores)
-        ? data.jugadores
-        : [];
-      const cruzadasMock = Array.isArray(data.cruzadas)
-        ? data.cruzadas
-        : [];
-
-      setJugadores(jugadoresMock);
-      setCruzadas(cruzadasMock);
-
-      localStorage.setItem("jugadores", JSON.stringify(jugadoresMock));
-      localStorage.setItem("cruzadas", JSON.stringify(cruzadasMock));
-    } catch (err) {
-      console.error("Error conectando a Mockable:", err);
-    } finally {
-      setLoadingData(false);
-    }
-  }
 
   function agregarCruzada(nueva) {
     const actualizadas = [...cruzadas, nueva];
