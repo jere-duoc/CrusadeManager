@@ -16,20 +16,21 @@ export function AuthProvider({ children }) {
     setCargando(false);
   }, []);
 
+  // --- FUNCIÓN LOGIN CORREGIDA ---
+  // Ahora permite que los errores de loginUsuario (HTTP 4xx) 
+  // se propaguen a los componentes que llaman (Login.jsx).
   const login = async (email, pass) => {
-    try {
-      const data = await loginUsuario(email, pass);
-      if (!data) return false; 
+    // Si loginUsuario falla (401, 403, 404), lanzará una excepción 
+    // y el código de abajo no se ejecutará.
+    const data = await loginUsuario(email, pass);
+    
+    // Si la promesa se resuelve (200 OK):
+    setUsuario(data); 
+    localStorage.setItem("usuario_warhammer", JSON.stringify(data)); 
 
-      setUsuario(data); 
-      localStorage.setItem("usuario_warhammer", JSON.stringify(data)); 
-
-      return true;
-    } catch (err) {
-      console.error("Error en login:", err);
-      return false;
-    }
+    return true;
   };
+  // ---------------------------------
 
   const updateUser = (nuevosDatos) => {
     try {
