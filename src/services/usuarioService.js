@@ -1,5 +1,5 @@
 export async function registrarUsuario(nombre, email, pass) {
-  const response = await fetch("http://localhost:8080/usuarios", {
+  const response = await fetch("http://98.94.209.168 /usuarios", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
